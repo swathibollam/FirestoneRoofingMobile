@@ -1,0 +1,49 @@
+<StackLayout horizontalAlignment="center" verticalAlignment="center">
+    <Label class="h2" [text]="params.context['title']" horizontalAlignment="center"></Label>
+    <StackLayout class="hr-dark"></StackLayout>
+    <StackLayout *ngFor="let opt of params.context['listOptions']">
+        <GridLayout rows="auto" borderRadius="10" columns="3*, *" (tap)="optionTapped(opt,ascOrder)"
+                    [ngClass]="{'even': true,
+                    'selected-opt-bk-color': (!!orderingParams.paramName && orderingParams.paramName === opt && !!orderingParams.ascOrder)}"
+                    padding="12">
+            <Label horizontalAlignment="left" [text]="opt" col="0"></Label>
+            <Label horizontalAlignment="right" text="&#xf063;" class="fa" col="1"></Label>
+        </GridLayout>
+        <GridLayout rows="auto" columns="3*, *" borderRadius="10" (tap)="optionTapped(opt,descOrder)"
+                    [ngClass]="{'odd': true,
+                    'selected-opt-bk-color': (!!orderingParams.paramName && orderingParams.paramName === opt && !!!orderingParams.ascOrder)}"
+                    padding="12">
+            <Label horizontalAlignment="left" [text]="opt" col="0"></Label>
+            <Label horizontalAlignment="right" text="&#xf062;" class="fa" col="1"></Label>
+        </GridLayout>
+
+    </StackLayout>
+    <StackLayout class="hr-dark"></StackLayout>
+    <StackLayout orientation="horizontal" horizontalAlignment="center">
+        <Button text="Clear" class="cancel-btn" (tap)="clearTapped()"></Button>
+        <Button text="Cancel" class="cancel-btn" (tap)="cancelTapped()"></Button>
+    </StackLayout>
+</StackLayout>
+
+
+<!--
+<StackLayout horizontalAlignment="center" verticalAlignment="center">
+    <Label [text]="params.context['title']" horizontalAlignment="center"></Label>
+    <StackLayout class="hr-dark"></StackLayout>
+    <StackLayout *ngFor="let opt of params.context['listOptions']">
+        <Button (tap)="optionTapped(opt, ascOrder)">
+            <FormattedString>
+                <Span [text]="opt" style="text-align: left"></Span>
+                <Span text="&#xf062;" class="fa" style="text-align: right"></Span>
+            </FormattedString>
+        </Button>
+        <Button (tap)="optionTapped(opt, descOrder)">
+            <FormattedString>
+                <Span [text]="opt" style="text-align: left; background-color: #b58900;"></Span>
+                <Span text="&#xf063;" class="fa" style="text-align: right; background-color: #593f35"></Span>
+            </FormattedString>
+        </Button>
+    </StackLayout>
+</StackLayout>
+-->
+

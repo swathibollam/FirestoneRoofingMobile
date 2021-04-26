@@ -1,0 +1,11 @@
+<StackLayout horizontalAlignment="center" verticalAlignment="center" margin="10">
+    <Label class="h2" [text]="params.context['title']" horizontalAlignment="center"></Label>
+    <StackLayout class="hr-dark"></StackLayout>
+    <DatePicker [date]="initialDate" [minDate]="minDate" [maxDate]="maxDate" id="pickDeliverDatePicker"
+                verticalAlignment="center" margin="5"></DatePicker>
+    <StackLayout class="hr-dark"></StackLayout>
+    <StackLayout orientation="horizontal" horizontalAlignment="center">
+        <Button text="OK" class="modal-datepick-btn" (tap)="okTapped()"></Button>
+        <Button text="Cancel" class="modal-datepick-btn" (tap)="cancelTapped()"></Button>
+    </StackLayout>
+</StackLayout>

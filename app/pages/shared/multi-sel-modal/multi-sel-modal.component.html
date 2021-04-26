@@ -1,0 +1,19 @@
+<StackLayout horizontalAlignment="center" verticalAlignment="center">
+
+    <Label class="h2" [text]="params.context['title']" horizontalAlignment="center"></Label>
+
+    <StackLayout class="hr-dark"></StackLayout>
+
+    <Label *ngFor="let opt of params.context['listOptions']" [id]="opt" [text]="opt"
+           (tap)="matTypeTapped(opt)" padding="12" margin="2" borderRadius="10"
+           [backgroundColor]="(selectedOpts.indexOf(opt) > -1) ? '#7cc17c' : '#ffffff'"></Label>
+
+    <StackLayout class="hr-dark"></StackLayout>
+
+    <StackLayout orientation="horizontal" horizontalAlignment="center">
+        <Button text="Select" class="multi-sel-modal-btn" (tap)="selectTapped()"></Button>
+        <Button text="Clear" class="multi-sel-modal-btn" (tap)="clearTapped()"></Button>
+        <Button text="Cancel" class="multi-sel-modal-btn" (tap)="cancelTapped()"></Button>
+    </StackLayout>
+
+</StackLayout>

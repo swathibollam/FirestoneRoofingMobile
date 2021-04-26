@@ -1,0 +1,148 @@
+<ActionBar class="action-bar">
+    <NavigationButton ios:visibility="collapsed" icon="res://menu" (tap)="onMainMenuTap()"></NavigationButton>
+    <ActionItem icon="res://navigation/menu" (tap)="onMainMenuTap()"
+                ios.position="left" android:visibility="collapsed">
+    </ActionItem>
+    <Label class="action-bar-title" [text]="title"></Label>
+</ActionBar>
+
+<RadSideDrawer #drawer showOverNavigation="true" [drawerTransition]="sideDrawerTransition">
+
+    <StackLayout tkDrawerContent>
+        <SideDrawer [selectedPage]="'Home'"></SideDrawer>
+    </StackLayout>
+
+    <GridLayout rows="auto, auto, *" columns="*" class="page-content" tkMainContent>
+
+        <!--<StackLayout padding="10dpi" class="form">-->
+
+            <SegmentedBar row="0" [items]="segBarItems" selectedIndex="0"
+                          (selectedIndexChange)="onSegBarSelectedIndexChange($event)" class="segbar-style m-5"></SegmentedBar>
+
+            <!--<GridLayout columns="*, *" rows="*, *" horizontalAlignment="center" verticalAlignment="center" class="filter-grid">
+
+                <TextField col="0" row="0" #searchTextField hint="&#xf002;  Search text" class="input input-rounded fa"></TextField>
+
+                <GridLayout col="1" row="0" columns="*, auto, auto" class="btn btn-outline btn-rounded-sm" (tap)="showSortListPicker($event)">
+                    <Label col="0" row="0" [text]="sortBtnText" class="sortBtnLabel" verticalAlignment="center"></Label>
+                    <Label col="1" row="0"
+                           *ngIf="((isSortSelected === true) && (sortedAsc === true)) || (isSortSelected === false && sortBtnText === envSortBtnText)"
+                           class="fa p-r-8" text="   &#xf063;" horizontalAlignment="center" verticalAlignment="center" ></Label>
+                    <Label col="2" row="0"
+                           *ngIf="((isSortSelected === true) && (sortedAsc === false)) || (isSortSelected === false && sortBtnText === envSortBtnText)"
+                           class="fa p-r-8" text="   &#xf062;" horizontalAlignment="center" verticalAlignment="center"></Label>
+                </GridLayout>
+
+                <Button col="0" text="Type: {{(selectedMatTypes.length === 0) ? 'All' : selectedMatTypes.join(', ')}}" row="1" colspan="2"
+                        class="btn btn-outline btn-rounded-sm btn-material-type" (tap)="showMaterialTypeSelect($event)"></Button>
+            </GridLayout>-->
+
+            <StackLayout row="1" orientation="vertical" horizontalAlignment="center" verticalAlignment="center" class="filter-grid">
+
+                <StackLayout orientation="horizontal" verticalAlignment="center">
+
+                    <!--<TextField  hint="&#xf002;  Search text" #searchTextField class="input input-rounded fa" style="width: 50%"></TextField>-->
+                    <StackLayout class="form" style="width: 50%" orientation="horizontal" marginRight="4">
+                        <TextField autocorrect="false" hint="Search Name/Puch#" id="searchTxtFieldView" #searchTextField
+                                   class="input input-rounded fa" style="width: 85%" (tap)="searchTextFieldTapped($event)"
+                                   (returnPress)="searchSubmitted()" returnKeyType="search"></TextField>
+                        <Button class="btn btn-outline btn-rounded-sm search-btn fa" text="&#xf002;"
+                                style="width: 15%" horizontalAlignment="right" (tap)="searchTapped($event)"></Button>
+                    </StackLayout>
+
+                    <StackLayout class="btn btn-outline btn-rounded-sm" (tap)="showSortListPicker($event)"
+                                 style="width: 50%" verticalAlignment="center" orientation="horizontal">
+
+                        <Label [text]="sortBtnText" class="sortBtnLabel" style="width: 66%" horizontalAlignment="left" verticalAlignment="center"></Label>
+
+                        <Label class="fa p-r-2" text=" &#xf063;" horizontalAlignment="right" style="width: 17%" verticalAlignment="center"
+                               *ngIf="((isSortSelected === true) && (sortedAsc === true)) || (isSortSelected === false && sortBtnText === envSortBtnText)">
+                        </Label>
+
+                        <Label class="fa p-r-3" text=" &#xf062;" horizontalAlignment="right" style="width: 17%" verticalAlignment="center"
+                               *ngIf="((isSortSelected === true) && (sortedAsc === false)) || (isSortSelected === false && sortBtnText === envSortBtnText)">
+                        </Label>
+
+                    </StackLayout>
+
+                </StackLayout>
+
+                <Button text="Type: {{(selectedMatTypes.length === 0) ? 'All' : selectedMatTypes.join(', ')}}"
+                        class="btn btn-outline btn-rounded-sm btn-material-type" (tap)="showMaterialTypeSelect($event)"></Button>
+            </StackLayout>
+
+            <ListView id="ordersListView" row="2" [items]="orders" separatorColor="white" (itemTap)="onOrderTap($event)">
+                <ng-template let-item="item" let-odd="odd" let-even="even">
+                    <CardView radius="{{getCardViewRadius()}}" class="cardStyle" [class.odd]="odd" [class.even]="even">
+
+                            <StackLayout id="cardItemsStack"
+                                         horizontalAlignment="center" verticalAlignment="center">
+
+                                <GridLayout columns="*, 3*" rows="auto, auto, auto, auto, auto, auto"
+                                            marginTop="7" marginBottom="7" marginLeft="5">
+
+                                    <Image src="{{getIconSource(item.materialType, item.materialType)}}"
+                                           stretch="fill" rowSpan="3" col="0" row="0"
+                                           marginBottom="2" backgroundColor="#6495ed" borderRadius="10"></Image>
+
+                                    <Button *ngIf="item.isPickedOrShipped === true; else notPickedOrShipped"
+                                            rowSpan="3" col="0" row="3" marginTop="2" borderRadius="10"
+                                            textWrap="true"
+                                            padding="5" class="picked-or-delivered-btn" >
+                                        <FormattedString>
+                                            <Span text="&#xf046;&#x000a;" class="fa"></Span>
+                                            <Span text="{{getButtonStatus(item)}}"></Span>
+                                        </FormattedString>
+                                    </Button>
+
+                                    <ng-template #notPickedOrShipped>
+                                        <Button rowSpan="3" col="0" row="3" marginTop="2" borderRadius="10"
+                                                backgroundColor="{{getButtonBgColor(item)}}" textWrap="true"
+                                                padding="5" (tap)="confirmPickup(item)" class="pick-or-del-btn">
+                                            <FormattedString>
+                                                <Span text="&#xf096;&#x000a;" class="fa"></Span>
+                                                <Span text="{{getButtonStatus(item)}}"></Span>
+                                            </FormattedString>
+                                        </Button>
+                                    </ng-template>
+
+                                    <StackLayout id="labelStackId" col="1" row="0" rowSpan="6" paddingLeft="10">
+
+                                        <Label text="{{item.jobName + '-' + item.purchOrderNum}}" textWrap="true"
+                                               horizontalAlignment="center"
+                                               class="h2" ></Label>
+
+                                        <StackLayout class="hr-dark"></StackLayout>
+
+                                        <Label textWrap="true"
+                                               [ngClass]="{'m-b-1': item.note, 'm-b-5': !item.note, 'm-t-5':true, 'cardOrderListLabel':true}" >
+                                            <FormattedString>
+                                                <Span text="Status: "></Span>
+                                                <Span text="{{getOrderStatus(item)}}" color="{{getOrderStatusColor(item)}}"></Span>
+                                            </FormattedString>
+                                        </Label>
+                                        <Label *ngIf="item.note" text="{{item.note}}" class="m-b-5 m-l-15 m-r-15 cardOrderListNoteLabel"
+                                               textWrap="true"></Label>
+                                        <WrapLayout orientation="horizontal" [ngClass]="{'m-b-5': true, 'link-color': !item.isPickedOrShipped}" (tap)="pickDeliverDtChangeTap(item)">
+                                            <Label *ngIf="item.isPickedOrShipped === false" text="&#xf040;  " class="fa"></Label>
+                                            <Label text="Pickup/Deliver Date: " class="cardOrderListLabel"></Label>
+                                            <Label text="{{item.pickupDate | date:'MMM d, y, h:mm a'}}" textWrap="true" class="cardOrderListLabel" ></Label>
+                                        </WrapLayout>
+                                        <Label text="City: {{item.city}}" textWrap="true" class="cardOrderListLabel m-b-5"></Label>
+                                        <Label text="Sales Order#: {{item.salesOrderNum}}" textWrap="true" class="cardOrderListLabel"></Label>
+
+                                    </StackLayout>
+
+                                </GridLayout>
+
+
+                            </StackLayout>
+                    </CardView>
+                </ng-template>
+            </ListView>
+
+        <!--</StackLayout>-->
+
+    </GridLayout>
+</RadSideDrawer>
+
